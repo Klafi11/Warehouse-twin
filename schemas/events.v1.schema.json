@@ -1,0 +1,774 @@
+{
+  "$defs": {
+    "Aisle": {
+      "description": "A walkable rectangle of lane cells.",
+      "properties": {
+        "aisle_id": {
+          "title": "Aisle Id",
+          "type": "string"
+        },
+        "height": {
+          "title": "Height",
+          "type": "integer"
+        },
+        "width": {
+          "title": "Width",
+          "type": "integer"
+        },
+        "x": {
+          "title": "X",
+          "type": "integer"
+        },
+        "y": {
+          "title": "Y",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "aisle_id",
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "title": "Aisle",
+      "type": "object"
+    },
+    "LocationSnapshot": {
+      "properties": {
+        "entity_id": {
+          "title": "Entity Id",
+          "type": "string"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "event_time": {
+          "format": "date-time",
+          "title": "Event Time",
+          "type": "string"
+        },
+        "event_type": {
+          "const": "location_snapshot",
+          "default": "location_snapshot",
+          "title": "Event Type",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/LocationSnapshotPayload"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "sequence": {
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "simulation_tick": {
+          "title": "Simulation Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "event_id",
+        "event_time",
+        "simulation_tick",
+        "sequence",
+        "run_id",
+        "entity_id",
+        "payload"
+      ],
+      "title": "LocationSnapshot",
+      "type": "object"
+    },
+    "LocationSnapshotPayload": {
+      "properties": {
+        "height": {
+          "default": 1,
+          "title": "Height",
+          "type": "integer"
+        },
+        "location_id": {
+          "title": "Location Id",
+          "type": "string"
+        },
+        "location_type": {
+          "enum": [
+            "aisle",
+            "shelf_slot",
+            "packing",
+            "inbound_dock",
+            "back_room",
+            "charger",
+            "repair_bay"
+          ],
+          "title": "Location Type",
+          "type": "string"
+        },
+        "sku": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sku"
+        },
+        "width": {
+          "default": 1,
+          "title": "Width",
+          "type": "integer"
+        },
+        "x": {
+          "title": "X",
+          "type": "integer"
+        },
+        "y": {
+          "title": "Y",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "location_id",
+        "location_type",
+        "x",
+        "y"
+      ],
+      "title": "LocationSnapshotPayload",
+      "type": "object"
+    },
+    "Product": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "sku": {
+          "title": "Sku",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sku",
+        "name"
+      ],
+      "title": "Product",
+      "type": "object"
+    },
+    "ProductSnapshot": {
+      "properties": {
+        "entity_id": {
+          "title": "Entity Id",
+          "type": "string"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "event_time": {
+          "format": "date-time",
+          "title": "Event Time",
+          "type": "string"
+        },
+        "event_type": {
+          "const": "product_snapshot",
+          "default": "product_snapshot",
+          "title": "Event Type",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/ProductSnapshotPayload"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "sequence": {
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "simulation_tick": {
+          "title": "Simulation Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "event_id",
+        "event_time",
+        "simulation_tick",
+        "sequence",
+        "run_id",
+        "entity_id",
+        "payload"
+      ],
+      "title": "ProductSnapshot",
+      "type": "object"
+    },
+    "ProductSnapshotPayload": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "sku": {
+          "title": "Sku",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sku",
+        "name"
+      ],
+      "title": "ProductSnapshotPayload",
+      "type": "object"
+    },
+    "RobotSnapshot": {
+      "properties": {
+        "entity_id": {
+          "title": "Entity Id",
+          "type": "string"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "event_time": {
+          "format": "date-time",
+          "title": "Event Time",
+          "type": "string"
+        },
+        "event_type": {
+          "const": "robot_snapshot",
+          "default": "robot_snapshot",
+          "title": "Event Type",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/RobotSnapshotPayload"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "sequence": {
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "simulation_tick": {
+          "title": "Simulation Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "event_id",
+        "event_time",
+        "simulation_tick",
+        "sequence",
+        "run_id",
+        "entity_id",
+        "payload"
+      ],
+      "title": "RobotSnapshot",
+      "type": "object"
+    },
+    "RobotSnapshotPayload": {
+      "properties": {
+        "load_capacity": {
+          "title": "Load Capacity",
+          "type": "integer"
+        },
+        "robot_id": {
+          "title": "Robot Id",
+          "type": "string"
+        },
+        "x": {
+          "title": "X",
+          "type": "integer"
+        },
+        "y": {
+          "title": "Y",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "robot_id",
+        "x",
+        "y",
+        "load_capacity"
+      ],
+      "title": "RobotSnapshotPayload",
+      "type": "object"
+    },
+    "RobotSpec": {
+      "properties": {
+        "load_capacity": {
+          "default": 4,
+          "title": "Load Capacity",
+          "type": "integer"
+        },
+        "robot_id": {
+          "title": "Robot Id",
+          "type": "string"
+        },
+        "x": {
+          "title": "X",
+          "type": "integer"
+        },
+        "y": {
+          "title": "Y",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "robot_id",
+        "x",
+        "y"
+      ],
+      "title": "RobotSpec",
+      "type": "object"
+    },
+    "RunEnded": {
+      "properties": {
+        "entity_id": {
+          "title": "Entity Id",
+          "type": "string"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "event_time": {
+          "format": "date-time",
+          "title": "Event Time",
+          "type": "string"
+        },
+        "event_type": {
+          "const": "run_ended",
+          "default": "run_ended",
+          "title": "Event Type",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/RunEndedPayload"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "sequence": {
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "simulation_tick": {
+          "title": "Simulation Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "event_id",
+        "event_time",
+        "simulation_tick",
+        "sequence",
+        "run_id",
+        "entity_id",
+        "payload"
+      ],
+      "title": "RunEnded",
+      "type": "object"
+    },
+    "RunEndedPayload": {
+      "properties": {
+        "final_tick": {
+          "title": "Final Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "final_tick"
+      ],
+      "title": "RunEndedPayload",
+      "type": "object"
+    },
+    "RunPaused": {
+      "properties": {
+        "entity_id": {
+          "title": "Entity Id",
+          "type": "string"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "event_time": {
+          "format": "date-time",
+          "title": "Event Time",
+          "type": "string"
+        },
+        "event_type": {
+          "const": "run_paused",
+          "default": "run_paused",
+          "title": "Event Type",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/RunPausedPayload"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "sequence": {
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "simulation_tick": {
+          "title": "Simulation Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "event_id",
+        "event_time",
+        "simulation_tick",
+        "sequence",
+        "run_id",
+        "entity_id",
+        "payload"
+      ],
+      "title": "RunPaused",
+      "type": "object"
+    },
+    "RunPausedPayload": {
+      "properties": {},
+      "title": "RunPausedPayload",
+      "type": "object"
+    },
+    "RunResumed": {
+      "properties": {
+        "entity_id": {
+          "title": "Entity Id",
+          "type": "string"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "event_time": {
+          "format": "date-time",
+          "title": "Event Time",
+          "type": "string"
+        },
+        "event_type": {
+          "const": "run_resumed",
+          "default": "run_resumed",
+          "title": "Event Type",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/RunResumedPayload"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "sequence": {
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "simulation_tick": {
+          "title": "Simulation Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "event_id",
+        "event_time",
+        "simulation_tick",
+        "sequence",
+        "run_id",
+        "entity_id",
+        "payload"
+      ],
+      "title": "RunResumed",
+      "type": "object"
+    },
+    "RunResumedPayload": {
+      "properties": {},
+      "title": "RunResumedPayload",
+      "type": "object"
+    },
+    "RunStarted": {
+      "properties": {
+        "entity_id": {
+          "title": "Entity Id",
+          "type": "string"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "event_time": {
+          "format": "date-time",
+          "title": "Event Time",
+          "type": "string"
+        },
+        "event_type": {
+          "const": "run_started",
+          "default": "run_started",
+          "title": "Event Type",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/RunStartedPayload"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "sequence": {
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "simulation_tick": {
+          "title": "Simulation Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "event_id",
+        "event_time",
+        "simulation_tick",
+        "sequence",
+        "run_id",
+        "entity_id",
+        "payload"
+      ],
+      "title": "RunStarted",
+      "type": "object"
+    },
+    "RunStartedPayload": {
+      "properties": {
+        "config": {
+          "$ref": "#/$defs/WarehouseConfig"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "seed",
+        "config"
+      ],
+      "title": "RunStartedPayload",
+      "type": "object"
+    },
+    "ShelfSlot": {
+      "properties": {
+        "sku": {
+          "title": "Sku",
+          "type": "string"
+        },
+        "slot_id": {
+          "title": "Slot Id",
+          "type": "string"
+        },
+        "x": {
+          "title": "X",
+          "type": "integer"
+        },
+        "y": {
+          "title": "Y",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "slot_id",
+        "x",
+        "y",
+        "sku"
+      ],
+      "title": "ShelfSlot",
+      "type": "object"
+    },
+    "Station": {
+      "properties": {
+        "kind": {
+          "enum": [
+            "packing",
+            "inbound_dock",
+            "back_room",
+            "charger",
+            "repair_bay"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "station_id": {
+          "title": "Station Id",
+          "type": "string"
+        },
+        "x": {
+          "title": "X",
+          "type": "integer"
+        },
+        "y": {
+          "title": "Y",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "station_id",
+        "kind",
+        "x",
+        "y"
+      ],
+      "title": "Station",
+      "type": "object"
+    },
+    "WarehouseConfig": {
+      "properties": {
+        "aisles": {
+          "items": {
+            "$ref": "#/$defs/Aisle"
+          },
+          "title": "Aisles",
+          "type": "array"
+        },
+        "height": {
+          "title": "Height",
+          "type": "integer"
+        },
+        "products": {
+          "items": {
+            "$ref": "#/$defs/Product"
+          },
+          "title": "Products",
+          "type": "array"
+        },
+        "robots": {
+          "items": {
+            "$ref": "#/$defs/RobotSpec"
+          },
+          "title": "Robots",
+          "type": "array"
+        },
+        "shelf_slots": {
+          "items": {
+            "$ref": "#/$defs/ShelfSlot"
+          },
+          "title": "Shelf Slots",
+          "type": "array"
+        },
+        "start_time": {
+          "format": "date-time",
+          "title": "Start Time",
+          "type": "string"
+        },
+        "stations": {
+          "items": {
+            "$ref": "#/$defs/Station"
+          },
+          "title": "Stations",
+          "type": "array"
+        },
+        "tick_seconds": {
+          "default": 1,
+          "title": "Tick Seconds",
+          "type": "integer"
+        },
+        "width": {
+          "title": "Width",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "width",
+        "height",
+        "start_time",
+        "products",
+        "aisles",
+        "shelf_slots",
+        "stations",
+        "robots"
+      ],
+      "title": "WarehouseConfig",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "location_snapshot": "#/$defs/LocationSnapshot",
+      "product_snapshot": "#/$defs/ProductSnapshot",
+      "robot_snapshot": "#/$defs/RobotSnapshot",
+      "run_ended": "#/$defs/RunEnded",
+      "run_paused": "#/$defs/RunPaused",
+      "run_resumed": "#/$defs/RunResumed",
+      "run_started": "#/$defs/RunStarted"
+    },
+    "propertyName": "event_type"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/RunStarted"
+    },
+    {
+      "$ref": "#/$defs/ProductSnapshot"
+    },
+    {
+      "$ref": "#/$defs/RobotSnapshot"
+    },
+    {
+      "$ref": "#/$defs/LocationSnapshot"
+    },
+    {
+      "$ref": "#/$defs/RunPaused"
+    },
+    {
+      "$ref": "#/$defs/RunResumed"
+    },
+    {
+      "$ref": "#/$defs/RunEnded"
+    }
+  ]
+}
