@@ -108,11 +108,11 @@ class Engine:
         )
 
     def _apply_due_commands(self) -> None:
-        due = [c for c in self._pending if c.tick == self._tick]
-        self._pending = [c for c in self._pending if c.tick != self._tick]
-        for command in due:
-            if self._status == "ended":
-                break
+        while self._status != "ended":
+            command = self._next_command()
+            if command is None:
+                return
+            self._pending.remove(command)
             if command.type == "pause" and self._status == "running":
                 self._status = "paused"
                 self._emit(RunPaused, self._run_id, RunPausedPayload())
@@ -122,6 +122,17 @@ class Engine:
             elif command.type == "end":
                 self._status = "ended"
                 self._emit(RunEnded, self._run_id, RunEndedPayload(final_tick=self._tick))
+
+    def _next_command(self) -> Command | None:
+        """The next command to apply now.
+
+        While running, that is the first one stamped for the current tick. While
+        paused simulated time is frozen, so a later-stamped command could never be
+        reached by ticking: the earliest-stamped one applies at the frozen tick.
+        """
+        if self._status == "paused":
+            return min(self._pending, key=lambda c: c.tick, default=None)
+        return next((c for c in self._pending if c.tick == self._tick), None)
 
     def _emit_run_start(self) -> None:
         config = self._config
@@ -185,7 +196,7 @@ class Engine:
         sequence = len(self._events) + 1
         event: Event = (
             event_cls(
-                event_id=str(uuid.uuid5(uuid.UUID(self._run_id), str(sequence))),
+                event_id=str(uuid.uuid5(uuid.NAMESPACE_URL, f"warehouse-twin:{self._run_id}:{sequence}")),
                 event_time=self._simulated_time(),
                 simulation_tick=self._tick,
                 sequence=sequence,

@@ -2,6 +2,8 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
+import pytest
+
 from warehouse_twin import Command, Engine, FileEventPublisher, default_config
 
 
@@ -53,3 +55,12 @@ def test_log_is_append_only_as_the_run_progresses(tmp_path: Path) -> None:
     after = log.read_text()
     assert after.startswith(before)
     assert [e["event_type"] for e in _read(log)] == ["run_started", "run_paused"]
+
+
+def test_starting_a_second_run_with_the_same_run_id_in_the_same_log_is_refused(
+    tmp_path: Path,
+) -> None:
+    Engine.create(default_config(), seed=1, publisher=FileEventPublisher(tmp_path))
+
+    with pytest.raises(FileExistsError):
+        Engine.create(default_config(), seed=1, publisher=FileEventPublisher(tmp_path))

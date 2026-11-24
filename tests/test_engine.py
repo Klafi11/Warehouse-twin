@@ -113,3 +113,35 @@ def test_command_stamped_in_the_past_is_rejected() -> None:
 
     with pytest.raises(ValueError, match="tick"):
         engine.submit(Command(tick=3, type="pause"))
+
+
+def test_resume_stamped_after_the_pause_tick_still_resumes_a_paused_run() -> None:
+    engine = Engine.create(default_config(), seed=1)
+    engine.submit(Command(tick=2, type="pause"))
+    engine.submit(Command(tick=6, type="resume"))
+
+    engine.advance(10)
+
+    resumed = [e for e in engine.events if e.event_type == "run_resumed"]
+    assert [e.simulation_tick for e in resumed] == [2]  # time was frozen at the pause
+    assert engine.snapshot().status == "running"
+    assert engine.snapshot().tick > 2
+
+
+def test_pause_stamped_later_waits_for_its_tick_after_an_earlier_resume() -> None:
+    engine = Engine.create(default_config(), seed=1)
+    engine.submit(Command(tick=2, type="pause"))
+    engine.submit(Command(tick=5, type="resume"))
+    engine.submit(Command(tick=8, type="pause"))
+
+    engine.advance(30)
+
+    paused = [e.simulation_tick for e in engine.events if e.event_type == "run_paused"]
+    assert paused == [2, 8]
+
+
+def test_run_id_supplied_by_the_caller_need_not_be_a_uuid() -> None:
+    engine = Engine.create(default_config(), seed=1, run_id="demo-run-1")
+
+    assert engine.events[0].run_id == "demo-run-1"
+    assert engine.events[0].event_id != engine.events[1].event_id

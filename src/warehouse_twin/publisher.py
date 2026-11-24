@@ -33,5 +33,8 @@ class FileEventPublisher:
         )
         path = self._root / event.run_id / f"{stream_for(event)}.jsonl"
         path.parent.mkdir(parents=True, exist_ok=True)
-        with path.open("a", encoding="utf-8") as log:
+        # A Run's first event creates its log exclusively: re-running the same run_id
+        # into the same root would otherwise silently interleave two Runs.
+        mode = "x" if event.sequence == 1 else "a"
+        with path.open(mode, encoding="utf-8") as log:
             log.write(json.dumps(record, separators=(",", ":")) + "\n")
